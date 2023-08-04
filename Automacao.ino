@@ -1,5 +1,12 @@
-// ===============================================================================
-// --- Biblioteca Auxiliar ---
+/*
+ * File:   Automacao.ino
+ * Author: Leonardo Mendonça Borges
+ *
+ * Created on 10 de Julho de 2023, 21:03
+ * 
+ */
+
+//Biblioteca Auxiliar
 #include  "Nextion.h"   //biblioteca Nextion
 #include <SoftwareSerial.h>
 #include <Servo.h>
@@ -11,7 +18,7 @@ Servo servo3;
 Servo servo4;
 
 //Funções
-void trigPuls(int trig);  //Função que gera o pulso de trigger
+void trigPuls(int trig);
 void EncheAgua(float);
 void EncheSuco(float);
 void BracoRobo(float);
@@ -204,6 +211,7 @@ void loop() {
     }
 }
 
+//Função que gera o pulso de trigger
 void trigPulse(int trig)
 {
   digitalWrite(trig, HIGH);  //Pulso de trigger em nível alto
