@@ -132,6 +132,7 @@ void setup() {
   digitalWrite(res_sucoTrig,  LOW);
   pinMode(res_sucoEcho,     INPUT);
 
+  // Declarando os pinos para os servos
   servo1.attach(pinservo1);
   servo2.attach(pinservo2);
   servo3.attach(pinservo3);
@@ -142,34 +143,29 @@ void setup() {
   servo2.write(PosInicial2);
   servo3.write(PosInicial3);
   servo4.write(PosInicial4);
-
-  //Interrupções
-  //attachInterrupt(digitalPinToInterrupt(optico2), EncheAgua, FALLING);          //Interrupção acionada com borda de subida
-  //attachInterrupt(digitalPinToInterrupt(optico3), EncheSuco, FALLING);          
-  //attachInterrupt(digitalPinToInterrupt(optico4), BracoRobo, FALLING);           
+   
 }
 
 void loop() {
   nexLoop(nex_listen_list);
-  digitalWrite(transistor2, LOW);
-  digitalWrite(transistor3, LOW);
   
-  NivAgua.getValue(&number1);
+  NivAgua.getValue(&number1);     //Lê o valor da barra de progresso do nível de agua desejado
   vol1 = number1/14;              //Volume de agua varia de 0 a 7
-  NivSuco.getValue(&number2);       
+  NivSuco.getValue(&number2);       //Lê o valor da barra de progresso do nível de suco desejado
   vol2 = vol1+(number2/25);         //Volume de suco varia do volume de agua + (0 a 4)
   
-  NivelRA = Niveis(res_aguaTrig, res_aguaEcho, 12);
-  bar_RA = map(NivelRA, 0, 12, 0, 100);
+  NivelRA = Niveis(res_aguaTrig, res_aguaEcho, 12);  //Mede o nível de água do reservatório
+  bar_RA = map(NivelRA, 0, 12, 0, 100);              //Manda o nível para a barra de progresso do Nextion
 
-  NivelRS = Niveis(res_sucoTrig, res_sucoEcho, 12);
-  bar_RS = map(NivelRS, 0, 12, 0, 100);
+  NivelRS = Niveis(res_sucoTrig, res_sucoEcho, 12);  //Mede o nível de suco do reservatório
+  bar_RS = map(NivelRS, 0, 12, 0, 100);              //Manda o nível para a barra de progresso do Nextion
 
   //Atualização dos valores do Nextion
   Pbar.setValue(Andamento);
   Ragua.setValue(bar_RA);
   Rsuco.setValue(bar_RS);
 
+  //Verifica a condição do botão de INICIAR
   bt0.getValue(&ds_var);
     if(ds_var) 
     {
@@ -212,7 +208,7 @@ void trigPulse(int trig)
 {
   digitalWrite(trig, HIGH);  //Pulso de trigger em nível alto
   delayMicroseconds(10);     //duração de 10 micro segundos
-  digitalWrite(trig, LOW);   //Pulso de trigge em nível baixo
+  digitalWrite(trig, LOW);   //Pulso de trigger em nível baixo
 }
 
 float Niveis(int trig, int echo, int altura){
@@ -353,6 +349,7 @@ void BracoRobo(){
   digitalWrite(transistor1, HIGH);       //liga o motor da esteira
 }
 
+//Função criada para uma movimentação desacelerada do braço robótico
 void moveServo(Servo servo, int PosDesejada) {
   
   int servoPos = servo.read();
